@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Stay — {{ booking.reference_code }} | Xceptional Place Hotel{% endblock %}
+{% block content %}
+
+<section class="bg-ink py-12">
+  <div class="max-w-6xl mx-auto px-5 lg:px-8 flex flex-wrap items-center justify-between gap-6">
+    <div>
+      <p class="uppercase tracking-widest2 text-gold-400 text-xs mb-2">My Stay</p>
+      <h1 class="font-serif text-white text-2xl md:text-3xl">Welcome, {{ booking.full_name }}</h1>
+      <p class="text-grey-400 text-sm mt-1">{{ booking.room_type.name }} &middot; {{ booking.check_in }} – {{ booking.check_out }} &middot; Ref: {{ booking.reference_code }}</p>
+    </div>
+    <span class="px-4 py-2 text-xs uppercase tracking-wide font-semibold bg-gold-400/10 text-gold-400 border border-gold-400/30">{{ booking.get_status_display }}</span>
+  </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-5 lg:px-8 py-14">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="bg-gold-50 border border-gold-300 text-gold-800 text-sm px-5 py-4 mb-10 flex items-center gap-3">
+    <i data-lucide="check-circle" class="w-5 h-5"></i> {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+    <!-- Order forms -->
+    <div class="lg:col-span-2">
+      <h2 class="font-serif text-2xl mb-6">Request a Service</h2>
+
+      <div class="flex flex-wrap gap-2 mb-8" id="portalTabs">
+        <button class="portal-tab active-tab px-4 py-2.5 text-xs uppercase tracking-wide bg-ink text-white" data-tab="food">Room Service</button>
+        <button class="portal-tab px-4 py-2.5 text-xs uppercase tracking-wide border border-grey-300 text-grey-600" data-tab="laundry">Laundry</button>
+        <button class="portal-tab px-4 py-2.5 text-xs uppercase tracking-wide border border-grey-300 text-grey-600" data-tab="housekeeping">Housekeeping</button>
+        <button class="portal-tab px-4 py-2.5 text-xs uppercase tracking-wide border border-grey-300 text-grey-600" data-tab="extra">Extras</button>
+      </div>
+
+      <!-- FOOD -->
+      <form method="post" action="{% url 'guestportal:place_order' booking.reference_code %}" class="portal-panel" data-panel="food">
+        {% csrf_token %}
+        <input type="hidden" name="order_type" value="food">
+        <p class="text-sm text-grey-600 mb-4">Select items from the menu (quantities noted in the details box):</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          {% for item in menu_items %}
+          <label class="flex items-center justify-between gap-2 border border-grey-200 px-4 py-3 text-sm cursor-pointer hover:border-gold-400">
+            <span class="flex items-center gap-2"><input type="checkbox" class="food-check accent-gold-500" data-name="{{ item.name }}" data-price="{{ item.price }}"> {{ item.name }}</span>
+            <span class="text-gold-600 text-xs font-semibold">₦{{ item.price|floatformat:0 }}</span>
+          </label>
+          {% endfor %}
+        </div>
+        <textarea name="details" id="foodDetails" rows="2" placeholder="e.g. 2x Jollof Rice with Chicken, 1x Chapman — Room 204" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 mb-4"></textarea>
+        <input type="hidden" name="amount" id="foodAmount" value="0">
+        {% include "partials/portal_room_payment.html" %}
+      </form>
+
+      <!-- LAUNDRY -->
+      <form method="post" action="{% url 'guestportal:place_order' booking.reference_code %}" class="portal-panel hidden" data-panel="laundry">
+        {% csrf_token %}
+        <input type="hidden" name="order_type" value="laundry">
+        <p class="text-sm text-grey-600 mb-4">Item-based pricing — list items and quantities:</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 text-xs text-grey-500">
+          <span>Shirt/Blouse — ₦1,500</span><span>Trousers — ₦2,000</span><span>Suit (2pc) — ₦5,500</span>
+          <span>Dress — ₦3,000</span><span>Bedding Set — ₦4,000</span><span>Towels (each) — ₦1,000</span>
+        </div>
+        <textarea name="details" required rows="2" placeholder="e.g. 3x Shirts, 1x Suit — Room 204" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 mb-4"></textarea>
+        <input type="hidden" name="amount" value="0">
+        {% include "partials/portal_room_payment.html" %}
+      </form>
+
+      <!-- HOUSEKEEPING -->
+      <form method="post" action="{% url 'guestportal:place_order' booking.reference_code %}" class="portal-panel hidden" data-panel="housekeeping">
+        {% csrf_token %}
+        <input type="hidden" name="order_type" value="housekeeping">
+        <input type="hidden" name="amount" value="0">
+        <p class="text-sm text-grey-600 mb-4">Quick requests:</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+          <button type="button" class="hk-quick border border-grey-200 px-3 py-2.5 text-xs hover:border-gold-400">Extra Towels</button>
+          <button type="button" class="hk-quick border border-grey-200 px-3 py-2.5 text-xs hover:border-gold-400">Fresh Bedding</button>
+          <button type="button" class="hk-quick border border-grey-200 px-3 py-2.5 text-xs hover:border-gold-400">Room Cleaning</button>
+          <button type="button" class="hk-quick border border-grey-200 px-3 py-2.5 text-xs hover:border-gold-400">Toiletries Refill</button>
+          <button type="button" class="hk-quick border border-grey-200 px-3 py-2.5 text-xs hover:border-gold-400">Maintenance Issue</button>
+          <button type="button" class="hk-quick border border-grey-200 px-3 py-2.5 text-xs hover:border-gold-400">Extra Pillows</button>
+        </div>
+        <textarea name="details" id="hkDetails" required rows="2" placeholder="Describe your request — Room 204" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 mb-4"></textarea>
+        <button type="submit" class="bg-ink text-white uppercase text-sm font-semibold tracking-wide px-7 py-3.5 hover:bg-gold-500 hover:text-ink transition-colors">Send Request</button>
+      </form>
+
+      <!-- EXTRAS -->
+      <form method="post" action="{% url 'guestportal:place_order' booking.reference_code %}" class="portal-panel hidden" data-panel="extra">
+        {% csrf_token %}
+        <input type="hidden" name="order_type" value="extra">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <label class="flex items-center justify-between gap-2 border border-grey-200 px-4 py-3 text-sm cursor-pointer hover:border-gold-400">
+            <span class="flex items-center gap-2"><input type="radio" name="extra_choice" class="extra-radio accent-gold-500" data-label="Airport Pickup" data-price="18000"> Airport Pickup</span>
+            <span class="text-gold-600 text-xs font-semibold">₦18,000</span>
+          </label>
+          <label class="flex items-center justify-between gap-2 border border-grey-200 px-4 py-3 text-sm cursor-pointer hover:border-gold-400">
+            <span class="flex items-center gap-2"><input type="radio" name="extra_choice" class="extra-radio accent-gold-500" data-label="Spa Session (60min)" data-price="25000"> Spa Session (60min)</span>
+            <span class="text-gold-600 text-xs font-semibold">₦25,000</span>
+          </label>
+          <label class="flex items-center justify-between gap-2 border border-grey-200 px-4 py-3 text-sm cursor-pointer hover:border-gold-400">
+            <span class="flex items-center gap-2"><input type="radio" name="extra_choice" class="extra-radio accent-gold-500" data-label="Late Checkout (until 4pm)" data-price="10000"> Late Checkout (until 4pm)</span>
+            <span class="text-gold-600 text-xs font-semibold">₦10,000</span>
+          </label>
+          <label class="flex items-center justify-between gap-2 border border-grey-200 px-4 py-3 text-sm cursor-pointer hover:border-gold-400">
+            <span class="flex items-center gap-2"><input type="radio" name="extra_choice" class="extra-radio accent-gold-500" data-label="Wake-up Call" data-price="0"> Wake-up Call</span>
+            <span class="text-gold-600 text-xs font-semibold">Free</span>
+          </label>
+        </div>
+        <textarea name="details" id="extraDetails" rows="2" placeholder="Add timing / flight details / notes" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 mb-4"></textarea>
+        <input type="hidden" name="amount" id="extraAmount" value="0">
+        {% include "partials/portal_room_payment.html" %}
+      </form>
+    </div>
+
+    <!-- Orders status -->
+    <div>
+      <h2 class="font-serif text-2xl mb-6">Your Requests</h2>
+      <div class="space-y-5">
+        {% for order in orders %}
+        <div class="border border-grey-200 p-5">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-sm font-semibold">{{ order.get_order_type_display }}</p>
+            <span class="text-[10px] uppercase tracking-wide px-2 py-1 bg-grey-100 text-grey-600">{{ order.get_status_display }}</span>
+          </div>
+          <p class="text-xs text-grey-500 mb-4">{{ order.details|truncatewords:14 }}</p>
+          <div class="w-full h-1.5 bg-grey-100 mb-2">
+            <div class="h-1.5 bg-gold-400" style="width:{{ order.progress_percent }}%"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-grey-400 uppercase tracking-wide">
+            <span>New</span><span>Ack.</span><span>In Progress</span><span>Ready</span><span>Delivered</span>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-sm text-grey-500">No requests yet. Use the form to order food, laundry or housekeeping.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Tabs
+  const tabs = document.querySelectorAll('.portal-tab');
+  const panels = document.querySelectorAll('.portal-panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => { t.classList.remove('active-tab', 'bg-ink', 'text-white'); t.classList.add('border', 'border-grey-300', 'text-grey-600'); });
+      tab.classList.add('active-tab', 'bg-ink', 'text-white');
+      tab.classList.remove('border', 'border-grey-300', 'text-grey-600');
+      panels.forEach(p => p.classList.toggle('hidden', p.dataset.panel !== tab.dataset.tab));
+    });
+  });
+
+  // Food totals
+  document.querySelectorAll('.food-check').forEach(cb => {
+    cb.addEventListener('change', () => {
+      let total = 0; let names = [];
+      document.querySelectorAll('.food-check:checked').forEach(c => { total += parseFloat(c.dataset.price); names.push(c.dataset.name); });
+      document.getElementById('foodAmount').value = total;
+      if (!document.getElementById('foodDetails').dataset.userEdited) {
+        document.getElementById('foodDetails').value = names.join(', ');
+      }
+    });
+  });
+  const foodDetails = document.getElementById('foodDetails');
+  if (foodDetails) foodDetails.addEventListener('input', () => foodDetails.dataset.userEdited = 'true');
+
+  // Housekeeping quick buttons
+  document.querySelectorAll('.hk-quick').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const el = document.getElementById('hkDetails');
+      el.value = el.value ? el.value + ', ' + btn.textContent : btn.textContent;
+    });
+  });
+
+  // Extras
+  document.querySelectorAll('.extra-radio').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('extraAmount').value = r.dataset.price;
+      document.getElementById('extraDetails').value = r.dataset.label + ' — ' + (document.getElementById('extraDetails').value.split('—')[1] || '');
+    });
+  });
+});
+</script>
+{% endblock %}

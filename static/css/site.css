@@ -1,0 +1,25 @@
+html { scroll-behavior: smooth; }
+
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.reveal-visible { opacity: 1; transform: translateY(0); }
+
+.text-balance { text-wrap: balance; }
+
+::selection { background: #d4af37; color: #0a0a0a; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #f2f2f2; }
+::-webkit-scrollbar-thumb { background: #c9a227; }
+
+.gold-underline { position: relative; }
+.gold-underline::after {
+  content: ''; position: absolute; left: 0; bottom: -10px; height: 2px; width: 56px;
+  background: linear-gradient(90deg, #d4af37, #f5e9c3);
+}
+
+.card-hover { transition: transform .4s ease, box-shadow .4s ease; }
+.card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -20px rgba(0,0,0,.25); }
+
+.step-active { color: #0a0a0a; }
+.step-active .step-circle { background: #0a0a0a; color: #fff; border-color: #0a0a0a; }
+.step-done .step-circle { background: #d4af37; color: #0a0a0a; border-color: #d4af37; }

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ room.name }} | Xceptional Place Hotel{% endblock %}
+{% block content %}
+
+<section class="max-w-7xl mx-auto px-5 lg:px-8 pt-10">
+  <nav class="text-xs text-grey-500 mb-8 flex items-center gap-2">
+    <a href="{% url 'core:home' %}" class="hover:text-gold-600">Home</a> <span>/</span>
+    <a href="{% url 'rooms:list' %}" class="hover:text-gold-600">Rooms &amp; Suites</a> <span>/</span>
+    <span class="text-ink">{{ room.name }}</span>
+  </nav>
+</section>
+
+<section class="max-w-7xl mx-auto px-5 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-2 mb-16">
+  <div class="h-[420px] lg:h-[560px] overflow-hidden">
+    <img src="{{ room.cover_image.url }}" alt="{{ room.name }}" class="w-full h-full object-cover">
+  </div>
+  <div class="grid grid-cols-2 gap-2 h-[420px] lg:h-[560px]">
+    {% if room.gallery.all %}
+      {% for g in room.gallery.all|slice:":4" %}
+      <div class="overflow-hidden"><img src="{{ g.image.url }}" class="w-full h-full object-cover" alt="{{ room.name }}"></div>
+      {% endfor %}
+    {% else %}
+      <div class="overflow-hidden"><img src="{% static 'images/standard-room.jpg' %}" class="w-full h-full object-cover" alt="{{ room.name }}"></div>
+      <div class="overflow-hidden"><img src="{% static 'images/exclusive-room.jpg' %}" class="w-full h-full object-cover" alt="{{ room.name }}"></div>
+      <div class="overflow-hidden"><img src="{% static 'images/relaxation-area.jpg' %}" class="w-full h-full object-cover" alt="{{ room.name }}"></div>
+      <div class="overflow-hidden"><img src="{% static 'images/poolside.jpg' %}" class="w-full h-full object-cover" alt="{{ room.name }}"></div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="max-w-7xl mx-auto px-5 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-14 pb-24">
+  <div class="lg:col-span-2">
+    <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-3">{{ room.get_category_display }}</p>
+    <h1 class="font-serif text-4xl md:text-5xl mb-4">{{ room.name }}</h1>
+    <p class="text-grey-600 mb-8">{{ room.tagline }}</p>
+
+    <div class="flex flex-wrap gap-8 border-y border-grey-200 py-6 mb-8">
+      <div class="flex items-center gap-2 text-sm text-grey-700"><i data-lucide="users" class="w-4 h-4 text-gold-500"></i> {{ room.capacity_adults }} Adults, {{ room.capacity_children }} Children</div>
+      <div class="flex items-center gap-2 text-sm text-grey-700"><i data-lucide="bed-double" class="w-4 h-4 text-gold-500"></i> {{ room.bed_type }}</div>
+      <div class="flex items-center gap-2 text-sm text-grey-700"><i data-lucide="ruler" class="w-4 h-4 text-gold-500"></i> {{ room.size_sqm }} m&sup2;</div>
+      <div class="flex items-center gap-2 text-sm text-grey-700"><i data-lucide="building-2" class="w-4 h-4 text-gold-500"></i> {{ room.floor_range }}</div>
+    </div>
+
+    <h2 class="font-serif text-2xl mb-4">About This Room</h2>
+    <p class="text-grey-600 leading-relaxed mb-10">{{ room.description }}</p>
+
+    <h2 class="font-serif text-2xl mb-5">Room Amenities</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+      {% for a in room.amenities_list %}
+      <div class="flex items-center gap-2 text-sm text-grey-700"><i data-lucide="check" class="w-4 h-4 text-gold-500"></i> {{ a }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="bg-grey-50 p-6 flex items-center gap-4">
+      <i data-lucide="calendar-check" class="w-6 h-6 text-gold-500 shrink-0"></i>
+      <p class="text-sm text-grey-700">
+        <span class="font-semibold text-ink">{{ room.rooms_available }} of {{ room.total_rooms }} rooms available</span> this month based on live occupancy — book early to secure your dates.
+      </p>
+    </div>
+  </div>
+
+  <aside class="lg:sticky lg:top-28 h-fit border border-grey-200 p-8">
+    <p class="text-3xl font-serif">₦{{ room.base_price|floatformat:0 }}<span class="text-sm text-grey-400 font-sans"> / night</span></p>
+    <p class="text-xs text-grey-500 mb-6">Includes taxes &amp; service charge</p>
+    <a href="{% url 'bookings:book' %}?room={{ room.id }}" class="w-full flex items-center justify-center gap-2 bg-ink text-white uppercase text-sm font-semibold tracking-wide py-4 hover:bg-gold-500 hover:text-ink transition-colors mb-4">
+      Book This Room <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+    <p class="text-xs text-grey-500 text-center">Free cancellation up to 48 hours before check-in.</p>
+  </aside>
+</section>
+
+{% if related %}
+<section class="bg-grey-50 py-20">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8">
+    <h2 class="font-serif text-2xl md:text-3xl mb-10">You May Also Like</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {% for r in related %}
+      <a href="{{ r.get_absolute_url }}" class="group block bg-white">
+        <div class="h-56 overflow-hidden"><img src="{{ r.cover_image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="{{ r.name }}"></div>
+        <div class="p-5">
+          <h3 class="font-serif text-lg group-hover:text-gold-600">{{ r.name }}</h3>
+          <p class="text-gold-600 text-sm font-semibold mt-1">₦{{ r.base_price|floatformat:0 }}/night</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

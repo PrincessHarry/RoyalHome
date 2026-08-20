@@ -1,0 +1,43 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block title %}Laundry | Staff Dashboard{% endblock %}
+{% block content %}
+
+<div class="mb-10">
+  <p class="uppercase tracking-widest2 text-gold-600 text-xs mb-2">Laundry</p>
+  <h1 class="font-serif text-3xl">Laundry Orders</h1>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+  {% for order in orders %}
+  <div class="bg-white border border-grey-200 p-6">
+    <div class="flex items-center justify-between mb-3">
+      <p class="font-serif text-lg">{{ order.booking.room_type.name }}</p>
+      <span class="text-[10px] uppercase px-2 py-1 bg-gold-50 text-gold-700">{{ order.get_status_display }}</span>
+    </div>
+    <p class="text-xs text-grey-500 mb-1">Ref: {{ order.booking.reference_code }} &middot; {{ order.booking.full_name }}</p>
+    <p class="text-sm text-grey-700 my-3">{{ order.details }}</p>
+    <p class="text-xs text-grey-400 mb-4">{{ order.created_at|timesince }} ago &middot; {{ order.get_payment_option_display }}</p>
+    <form method="post" action="{% url 'dashboard:update_order_status' order.id %}" class="flex gap-2 flex-wrap">
+      {% csrf_token %}
+      {% if order.status == 'new' %}<button name="status" value="acknowledged" class="text-xs uppercase bg-ink text-white px-3 py-2 hover:bg-gold-500 hover:text-ink">Acknowledge</button>{% endif %}
+      {% if order.status == 'acknowledged' %}<button name="status" value="in_progress" class="text-xs uppercase bg-ink text-white px-3 py-2 hover:bg-gold-500 hover:text-ink">Start Washing</button>{% endif %}
+      {% if order.status == 'in_progress' %}<button name="status" value="ready" class="text-xs uppercase bg-ink text-white px-3 py-2 hover:bg-gold-500 hover:text-ink">Mark Ready</button>{% endif %}
+      {% if order.status == 'ready' %}<button name="status" value="delivered" class="text-xs uppercase bg-ink text-white px-3 py-2 hover:bg-gold-500 hover:text-ink">Mark Delivered</button>{% endif %}
+    </form>
+  </div>
+  {% empty %}
+  <p class="text-grey-400 col-span-3 text-center py-16">No active laundry requests. New orders will appear here in real time.</p>
+  {% endfor %}
+</div>
+
+<div class="bg-white border border-grey-200 p-6">
+  <h2 class="font-serif text-lg mb-4">Recently Completed</h2>
+  {% for order in completed %}
+  <div class="flex items-center justify-between text-sm border-b border-grey-50 py-2.5">
+    <span>{{ order.booking.room_type.name }} — {{ order.details|truncatewords:8 }}</span>
+    <span class="text-grey-400 text-xs">{{ order.updated_at|timesince }} ago</span>
+  </div>
+  {% empty %}<p class="text-xs text-grey-400">No completed orders yet.</p>{% endfor %}
+</div>
+
+{% endblock %}

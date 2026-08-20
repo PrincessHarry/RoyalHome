@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Rooms &amp; Suites | Xceptional Place Hotel{% endblock %}
+{% block content %}
+
+<section class="relative h-[45vh] min-h-[340px] overflow-hidden">
+  <img src="{% static 'images/exclusive-room.jpg' %}" class="absolute inset-0 w-full h-full object-cover" alt="Rooms & Suites">
+  <div class="absolute inset-0 bg-ink/60"></div>
+  <div class="relative h-full max-w-7xl mx-auto px-5 lg:px-8 flex flex-col justify-end pb-14">
+    <p class="uppercase tracking-widest2 text-gold-400 text-xs mb-4">Accommodation</p>
+    <h1 class="font-serif text-white text-4xl md:text-6xl">Rooms &amp; Suites</h1>
+  </div>
+</section>
+
+<section class="max-w-7xl mx-auto px-5 lg:px-8 py-16">
+  <form method="get" class="flex flex-wrap gap-4 items-end mb-14 bg-grey-50 p-6">
+    <div>
+      <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Room Category</label>
+      <select name="category" class="border border-grey-300 px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-gold-400 min-w-[180px]">
+        <option value="all" {% if selected_category == 'all' %}selected{% endif %}>All Categories</option>
+        {% for value, label in categories %}
+        <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Guests</label>
+      <select name="guests" class="border border-grey-300 px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-gold-400 min-w-[140px]">
+        <option value="">Any</option>
+        <option value="1">1 Adult</option>
+        <option value="2">2 Adults</option>
+        <option value="3">3 Adults</option>
+        <option value="4">4+ Adults</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Max Price/Night</label>
+      <select name="max_price" class="border border-grey-300 px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-gold-400 min-w-[160px]">
+        <option value="">Any</option>
+        <option value="80000">Up to ₦80,000</option>
+        <option value="150000">Up to ₦150,000</option>
+        <option value="250000">Up to ₦250,000</option>
+      </select>
+    </div>
+    <button type="submit" class="bg-ink text-white uppercase text-sm font-semibold tracking-wide px-7 py-2.5 hover:bg-gold-500 hover:text-ink transition-colors flex items-center gap-2">
+      <i data-lucide="filter" class="w-4 h-4"></i> Filter
+    </button>
+    <a href="{% url 'rooms:list' %}" class="text-sm text-grey-500 hover:text-ink underline underline-offset-4">Reset</a>
+  </form>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for room in rooms %}
+    <div class="group card-hover border border-grey-100">
+      <a href="{{ room.get_absolute_url }}" class="block relative h-72 overflow-hidden">
+        <img src="{{ room.cover_image.url }}" alt="{{ room.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+        <span class="absolute top-4 left-4 bg-white/95 text-ink text-[11px] uppercase tracking-widest2 px-3 py-1.5">{{ room.get_category_display }}</span>
+        {% if room.rooms_available <= 3 %}
+        <span class="absolute top-4 right-4 bg-gold-400 text-ink text-[11px] uppercase tracking-widest2 px-3 py-1.5">Only {{ room.rooms_available }} left</span>
+        {% endif %}
+      </a>
+      <div class="p-6">
+        <div class="flex items-start justify-between gap-3">
+          <h3 class="font-serif text-xl"><a href="{{ room.get_absolute_url }}" class="hover:text-gold-600">{{ room.name }}</a></h3>
+          <p class="text-gold-600 font-semibold whitespace-nowrap">₦{{ room.base_price|floatformat:0 }}<span class="text-grey-400 text-xs font-normal">/night</span></p>
+        </div>
+        <p class="text-sm text-grey-500 mt-2 mb-4">{{ room.tagline }}</p>
+        <div class="flex flex-wrap gap-3 text-xs text-grey-500 mb-5">
+          <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5"></i> {{ room.capacity_adults }} Adults</span>
+          <span class="flex items-center gap-1"><i data-lucide="bed-double" class="w-3.5 h-3.5"></i> {{ room.bed_type }}</span>
+          <span class="flex items-center gap-1"><i data-lucide="ruler" class="w-3.5 h-3.5"></i> {{ room.size_sqm }} m&sup2;</span>
+        </div>
+        <div class="flex gap-3">
+          <a href="{{ room.get_absolute_url }}" class="flex-1 text-center border border-grey-300 text-sm font-semibold uppercase tracking-wide py-3 hover:border-gold-400 hover:text-gold-600 transition-colors">Details</a>
+          <a href="{% url 'bookings:book' %}?room={{ room.id }}" class="flex-1 text-center bg-ink text-white text-sm font-semibold uppercase tracking-wide py-3 hover:bg-gold-500 hover:text-ink transition-colors">Book Now</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="col-span-3 text-center text-grey-500 py-20">No rooms match your filters. Try adjusting your search.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

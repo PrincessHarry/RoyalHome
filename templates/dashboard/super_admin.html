@@ -1,0 +1,123 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block title %}Super Admin | Staff Dashboard{% endblock %}
+{% block content %}
+
+<div class="flex items-center justify-between mb-10">
+  <div>
+    <p class="uppercase tracking-widest2 text-gold-600 text-xs mb-2">Super Admin</p>
+    <h1 class="font-serif text-3xl">Hotel Overview</h1>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+  <div class="bg-white border border-grey-200 p-5">
+    <i data-lucide="calendar-check" class="w-5 h-5 text-gold-500 mb-3"></i>
+    <p class="text-2xl font-serif">{{ stats.total_bookings }}</p>
+    <p class="text-xs text-grey-500 mt-1">Total Bookings</p>
+  </div>
+  <div class="bg-white border border-grey-200 p-5">
+    <i data-lucide="banknote" class="w-5 h-5 text-gold-500 mb-3"></i>
+    <p class="text-2xl font-serif">₦{{ stats.revenue|floatformat:0 }}</p>
+    <p class="text-xs text-grey-500 mt-1">Revenue (Paid)</p>
+  </div>
+  <div class="bg-white border border-grey-200 p-5">
+    <i data-lucide="bed" class="w-5 h-5 text-gold-500 mb-3"></i>
+    <p class="text-2xl font-serif">{{ stats.occupied_rooms }}</p>
+    <p class="text-xs text-grey-500 mt-1">Occupied / Confirmed</p>
+  </div>
+  <div class="bg-white border border-grey-200 p-5">
+    <i data-lucide="clock" class="w-5 h-5 text-gold-500 mb-3"></i>
+    <p class="text-2xl font-serif">{{ stats.pending_orders }}</p>
+    <p class="text-xs text-grey-500 mt-1">Pending Orders</p>
+  </div>
+  <div class="bg-white border border-grey-200 p-5">
+    <i data-lucide="party-popper" class="w-5 h-5 text-gold-500 mb-3"></i>
+    <p class="text-2xl font-serif">{{ stats.event_inquiries }}</p>
+    <p class="text-xs text-grey-500 mt-1">New Event Inquiries</p>
+  </div>
+  <div class="bg-white border border-grey-200 p-5">
+    <i data-lucide="mail" class="w-5 h-5 text-gold-500 mb-3"></i>
+    <p class="text-2xl font-serif">{{ stats.new_messages }}</p>
+    <p class="text-xs text-grey-500 mt-1">Contact Messages</p>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+  <div class="lg:col-span-2 bg-white border border-grey-200 p-6">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="font-serif text-xl">Recent Bookings</h2>
+      <a href="{% url 'dashboard:front_desk' %}" class="text-xs uppercase tracking-wide text-gold-600 hover:underline">View All</a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="text-left text-[11px] uppercase tracking-widest2 text-grey-400 border-b border-grey-100">
+          <th class="pb-3">Reference</th><th class="pb-3">Guest</th><th class="pb-3">Room</th><th class="pb-3">Dates</th><th class="pb-3">Status</th>
+        </tr></thead>
+        <tbody>
+          {% for b in bookings %}
+          <tr class="border-b border-grey-50">
+            <td class="py-3 font-medium">{{ b.reference_code }}</td>
+            <td class="py-3">{{ b.full_name }}</td>
+            <td class="py-3">{{ b.room_type.name }}</td>
+            <td class="py-3 text-grey-500">{{ b.check_in }} → {{ b.check_out }}</td>
+            <td class="py-3"><span class="text-[10px] uppercase px-2 py-1 bg-grey-100">{{ b.get_status_display }}</span></td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="py-6 text-grey-400 text-center">No bookings yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="bg-white border border-grey-200 p-6">
+    <h2 class="font-serif text-xl mb-6">Orders by Type</h2>
+    <div class="space-y-4">
+      {% for o in orders_by_type %}
+      <div class="flex items-center justify-between text-sm">
+        <span class="capitalize">{{ o.order_type }}</span>
+        <span class="font-semibold text-gold-600">{{ o.count }}</span>
+      </div>
+      {% empty %}
+      <p class="text-grey-400 text-sm">No orders yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+  <div class="bg-white border border-grey-200 p-6">
+    <div class="flex items-center gap-2 mb-6">
+      <i data-lucide="sparkles" class="w-5 h-5 text-gold-500"></i>
+      <h2 class="font-serif text-xl">AI Sentiment Summary</h2>
+    </div>
+    <p class="text-sm text-grey-600 leading-relaxed mb-4">Based on recent guest reviews, sentiment is <span class="font-semibold text-green-600">largely positive (86%)</span>. Guests consistently praise room cleanliness, staff friendliness and the pool area. A recurring theme flags occasional slow room-service response during peak hours — flagged for Kitchen team follow-up.</p>
+    <div class="space-y-3">
+      {% for r in recent_reviews %}
+      <div class="border-t border-grey-100 pt-3">
+        <p class="text-xs text-grey-500">{{ r.guest_name }} — {{ r.rating }}★</p>
+        <p class="text-sm text-grey-700 mt-1">&ldquo;{{ r.comment|truncatewords:16 }}&rdquo;</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="bg-white border border-grey-200 p-6">
+    <div class="flex items-center gap-2 mb-6">
+      <i data-lucide="users" class="w-5 h-5 text-gold-500"></i>
+      <h2 class="font-serif text-xl">Staff Directory</h2>
+    </div>
+    <div class="space-y-3">
+      {% for s in staff %}
+      <div class="flex items-center justify-between text-sm border-b border-grey-50 pb-3">
+        <span>{{ s.user.get_full_name|default:s.user.username }}</span>
+        <span class="text-[10px] uppercase px-2 py-1 bg-grey-100 text-grey-600">{{ s.get_role_display }}</span>
+      </div>
+      {% empty %}
+      <p class="text-grey-400 text-sm">No staff profiles yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

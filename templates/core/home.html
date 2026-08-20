@@ -1,0 +1,410 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- ============ HERO ============ -->
+<section class="relative h-[92vh] min-h-[420px] w-full overflow-hidden">
+  <img src="{% static 'images/building.jpg' %}" alt="Xceptional Place Hotel building" class="absolute inset-0 w-full h-full object-cover">
+  <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/30"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-ink/70 via-transparent to-ink/40"></div>
+
+  <div class="relative h-full max-w-7xl mx-auto px-5 lg:px-8 flex flex-col justify-end pb-16 lg:pb-20">
+   
+    <h1 class="font-serif text-white text-4xl sm:text-5xl lg:text-7xl leading-[1.05] max-w-3xl text-balance">
+      Where Timeless Luxury Meets <span class="italic text-gold-400">Intelligent</span> Hospitality
+    </h1>
+    <p class="text-grey-200 text-base md:text-lg max-w-xl mt-6 leading-relaxed">
+      Experience Jos's most exceptional address, elegant rooms, curated dining, and an AI concierge that anticipates your every need, from check-in to check-out.
+    </p>
+    <div class="flex flex-wrap gap-4 mt-9">
+      <a href="{% url 'bookings:book' %}" class="inline-flex items-center gap-2 bg-gold-400 text-ink font-semibold uppercase text-sm tracking-wide px-8 py-4 hover:bg-white transition-colors">
+        Book Your Stay <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+      <a href="{% url 'rooms:list' %}" class="inline-flex items-center gap-2 border border-white/40 text-white font-semibold uppercase text-sm tracking-wide px-8 py-4 hover:border-gold-400 hover:text-gold-400 transition-colors">
+        Explore Rooms
+      </a>
+    </div>
+  </div>
+
+  <!-- Quick book widget -->
+  <div class="relative max-w-7xl mx-auto px-5 lg:px-8 -mb-10 lg:-mb-12 z-20">
+    <form action="{% url 'bookings:book' %}" method="get" class="bg-white shadow-2xl p-5 md:p-6 grid grid-cols-2 md:grid-cols-5 gap-4 items-end">
+      <div class="col-span-1">
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Check-in</label>
+        <input type="date" name="check_in" class="w-full border-b border-grey-300 py-2 text-sm focus:outline-none focus:border-gold-400 bg-transparent">
+      </div>
+      <div class="col-span-1">
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Check-out</label>
+        <input type="date" name="check_out" class="w-full border-b border-grey-300 py-2 text-sm focus:outline-none focus:border-gold-400 bg-transparent">
+      </div>
+      <div class="col-span-1">
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Guests</label>
+        <select name="guests" class="w-full border-b border-grey-300 py-2 text-sm focus:outline-none focus:border-gold-400 bg-transparent">
+          <option>1 Adult</option>
+          <option selected>2 Adults</option>
+          <option>3 Adults</option>
+          <option>4+ Adults</option>
+        </select>
+      </div>
+      <div class="col-span-1">
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Room Type</label>
+        <select name="room" class="w-full border-b border-grey-300 py-2 text-sm focus:outline-none focus:border-gold-400 bg-transparent">
+          <option value="">Any</option>
+          {% for room in featured_rooms %}
+          <option value="{{ room.id }}">{{ room.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="col-span-2 md:col-span-1 bg-ink text-white uppercase text-sm font-semibold tracking-wide py-3.5 hover:bg-gold-500 hover:text-ink transition-colors flex items-center justify-center gap-2">
+        <i data-lucide="search" class="w-4 h-4"></i> Check Availability
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ TRUST STRIP ============ -->
+<section class="bg-white pt-24 pb-10 border-b border-grey-100">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <div class="reveal">
+      <p class="font-serif text-3xl text-ink">120+</p>
+      <p class="text-xs uppercase tracking-widest2 text-grey-500 mt-1">Rooms &amp; Suites</p>
+    </div>
+    <div class="reveal">
+      <p class="font-serif text-3xl text-ink">24/7</p>
+      <p class="text-xs uppercase tracking-widest2 text-grey-500 mt-1">Solar-Backed Power</p>
+    </div>
+    <div class="reveal">
+      <p class="font-serif text-3xl text-ink">4.8/5</p>
+      <p class="text-xs uppercase tracking-widest2 text-grey-500 mt-1">Guest Rating</p>
+    </div>
+    <div class="reveal">
+      <p class="font-serif text-3xl text-ink">600</p>
+      <p class="text-xs uppercase tracking-widest2 text-grey-500 mt-1">Event Guest Capacity</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTRO ============ -->
+<section class="max-w-5xl mx-auto px-5 lg:px-8 py-24 text-center reveal">
+  <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">Welcome to Xceptional Place</p>
+  <h2 class="font-serif text-3xl md:text-5xl leading-tight text-balance">A Luxury Sanctuary in the Heart of Rayfield</h2>
+  <p class="text-grey-600 mt-6 max-w-2xl mx-auto leading-relaxed">
+    Xceptional Place Hotel blends the warmth of Nigerian hospitality with the precision of smart technology. From real-time room availability to an AI concierge that handles requests the moment you think of them, every detail is designed around you.
+  </p>
+</section>
+
+<!-- ============ SMART FEATURES ============ -->
+<section class="bg-grey-50 py-24">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8">
+    <div class="text-center mb-16 reveal">
+      <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">Intelligent Hospitality</p>
+      <h2 class="font-serif text-3xl md:text-5xl">Smart Hotel, Effortless Stay</h2>
+      <p class="text-grey-600 mt-4 max-w-2xl mx-auto">Every stage of your journey, booking, arrival, in-stay requests, and beyond, is powered by technology built for comfort.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white p-8 border border-grey-100 card-hover reveal">
+        <div class="w-12 h-12 flex items-center justify-center bg-ink text-gold-400 mb-6"><i data-lucide="calendar-check" class="w-5 h-5"></i></div>
+        <h3 class="font-serif text-xl mb-3">Real-Time Booking Engine</h3>
+        <p class="text-sm text-grey-600 leading-relaxed">Live availability calendar, dynamic pricing, and instant Paystack payments, in Naira, by card or bank transfer.</p>
+      </div>
+      <div class="bg-white p-8 border border-grey-100 card-hover reveal">
+        <div class="w-12 h-12 flex items-center justify-center bg-ink text-gold-400 mb-6"><i data-lucide="qr-code" class="w-5 h-5"></i></div>
+        <h3 class="font-serif text-xl mb-3">"My Stay" Guest Portal</h3>
+        <p class="text-sm text-grey-600 leading-relaxed">Scan a QR code at check-in to order food, laundry, housekeeping and extras, no app download required.</p>
+      </div>
+      <div class="bg-white p-8 border border-grey-100 card-hover reveal">
+        <div class="w-12 h-12 flex items-center justify-center bg-ink text-gold-400 mb-6"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+        <h3 class="font-serif text-xl mb-3">AI Concierge Chatbot</h3>
+        <p class="text-sm text-grey-600 leading-relaxed">Ask questions or place conversational orders on web or WhatsApp, "bring towels and jollof to room 204."</p>
+      </div>
+      <div class="bg-white p-8 border border-grey-100 card-hover reveal">
+        <div class="w-12 h-12 flex items-center justify-center bg-ink text-gold-400 mb-6"><i data-lucide="radio" class="w-5 h-5"></i></div>
+        <h3 class="font-serif text-xl mb-3">Live Order Tracking</h3>
+        <p class="text-sm text-grey-600 leading-relaxed">Every request moves through New → Acknowledged → In Progress → Ready → Delivered, visible in real time.</p>
+      </div>
+      <div class="bg-white p-8 border border-grey-100 card-hover reveal">
+        <div class="w-12 h-12 flex items-center justify-center bg-ink text-gold-400 mb-6"><i data-lucide="brain-circuit" class="w-5 h-5"></i></div>
+        <h3 class="font-serif text-xl mb-3">Smart Room Recommender</h3>
+        <p class="text-sm text-grey-600 leading-relaxed">Tell us your needs, business, leisure, group size, and our AI matches you to the ideal room instantly.</p>
+      </div>
+      <div class="bg-white p-8 border border-grey-100 card-hover reveal">
+        <div class="w-12 h-12 flex items-center justify-center bg-ink text-gold-400 mb-6"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
+        <h3 class="font-serif text-xl mb-3">Role-Based Staff Dashboards</h3>
+        <p class="text-sm text-grey-600 leading-relaxed">Dedicated logins for Front Desk, Kitchen, Laundry, Housekeeping and Super Admin keep operations seamless.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURED ROOMS ============ -->
+<section class="py-24 max-w-7xl mx-auto px-5 lg:px-8">
+  <div class="flex flex-wrap items-end justify-between gap-6 mb-14 reveal">
+    <div>
+      <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">Accommodation</p>
+      <h2 class="font-serif text-3xl md:text-5xl">Rooms &amp; Suites</h2>
+    </div>
+    <a href="{% url 'rooms:list' %}" class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide border-b-2 border-gold-400 pb-1 hover:text-gold-600">
+      View All Rooms <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="group card-hover reveal">
+      <div class="relative h-56 md:h-80 overflow-hidden">
+        <img src="{% static 'images/standard-room.jpg' %}" alt="Standard Room" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+        <span class="absolute top-4 left-4 bg-white/95 text-ink text-[11px] uppercase tracking-widest2 px-3 py-1.5">Standard</span>
+      </div>
+      <div class="pt-5">
+        <div class="flex items-center justify-between">
+          <h3 class="font-serif text-xl">Standard Room</h3>
+          <p class="text-gold-600 font-semibold">₦65,000<span class="text-grey-400 text-xs font-normal">/night</span></p>
+        </div>
+        <p class="text-sm text-grey-500 mt-2">Cosy comfort with a plush queen bed, smart TV and Starlink, perfect for solo travellers and couples.</p>
+      </div>
+    </div>
+    <div class="group card-hover reveal">
+      <div class="relative h-56 md:h-80 overflow-hidden">
+        <img src="{% static 'images/exclusive-room.jpg' %}" alt="Exclusive Suite" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+        <span class="absolute top-4 left-4 bg-gold-400 text-ink text-[11px] uppercase tracking-widest2 px-3 py-1.5">Exclusive</span>
+      </div>
+      <div class="pt-5">
+        <div class="flex items-center justify-between">
+          <h3 class="font-serif text-xl">Exclusive Suite</h3>
+          <p class="text-gold-600 font-semibold">₦145,000<span class="text-grey-400 text-xs font-normal">/night</span></p>
+        </div>
+        <p class="text-sm text-grey-500 mt-2">Panoramic Plateau views, a king bed, private lounge and premium finishes for the discerning guest.</p>
+      </div>
+    </div>
+    <div class="group card-hover reveal">
+      <div class="relative h-56 md:h-80 overflow-hidden">
+        <img src="{% static 'images/poolside.jpg' %}" alt="Poolside Villa" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+        <span class="absolute top-4 left-4 bg-white/95 text-ink text-[11px] uppercase tracking-widest2 px-3 py-1.5">Presidential</span>
+      </div>
+      <div class="pt-5">
+        <div class="flex items-center justify-between">
+          <h3 class="font-serif text-xl">Presidential Villa</h3>
+          <p class="text-gold-600 font-semibold">₦220,000<span class="text-grey-400 text-xs font-normal">/night</span></p>
+        </div>
+        <p class="text-sm text-grey-500 mt-2">A private pool-facing villa with butler service, ideal for VIP guests and honeymooners.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESTAURANT ============ -->
+<section class="py-24 bg-ink text-white">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+    <div class="reveal">
+      <img src="{% static 'images/restaurant.jpg' %}" alt="The Seemetric Room Restaurant" class="w-full h-[480px] object-cover">
+    </div>
+    <div class="reveal">
+      <p class="uppercase tracking-widest2 text-gold-400 text-xs mb-4">Dining</p>
+      <h2 class="font-serif text-3xl md:text-5xl mb-6">The Seemetric Room Restaurant</h2>
+      <p class="text-grey-300 leading-relaxed mb-8">A refined dining experience blending continental classics with Nigerian favourites, from suya-spiced grills to a proper bowl of jollof. Open daily, with 24-hour room service through your My Stay portal.</p>
+      <ul class="space-y-4 mb-9 text-sm">
+        <li class="flex items-center gap-3"><i data-lucide="sun" class="w-4 h-4 text-gold-400"></i> Breakfast — 6:00am – 10:00am</li>
+        <li class="flex items-center gap-3"><i data-lucide="utensils" class="w-4 h-4 text-gold-400"></i> Lunch — 12:00pm – 4:00pm</li>
+        <li class="flex items-center gap-3"><i data-lucide="moon" class="w-4 h-4 text-gold-400"></i> Dinner — 6:00pm – 10:00pm</li>
+        <li class="flex items-center gap-3"><i data-lucide="bell" class="w-4 h-4 text-gold-400"></i> Room Service — 24/7 via AI Concierge</li>
+      </ul>
+      <a href="{% url 'restaurant:menu' %}" class="inline-flex items-center gap-2 border border-gold-400 text-gold-400 uppercase text-sm font-semibold tracking-wide px-7 py-3.5 hover:bg-gold-400 hover:text-ink transition-colors">
+        View Full Menu <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AMENITIES ============ -->
+<section class="py-24 max-w-7xl mx-auto px-5 lg:px-8">
+  <div class="text-center mb-16 reveal">
+    <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">Facilities</p>
+    <h2 class="font-serif text-3xl md:text-5xl">Amenities &amp; Facilities</h2>
+    <p class="text-grey-600 mt-4 max-w-2xl mx-auto">Everything you need for a seamless stay, wrapped in understated luxury.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div class="relative h-96 overflow-hidden group reveal">
+      <img src="{% static 'images/poolside.jpg' %}" alt="Swimming Pool" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+      <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent"></div>
+      <div class="absolute bottom-0 p-8">
+        <i data-lucide="waves" class="w-6 h-6 text-gold-400 mb-3"></i>
+        <h3 class="font-serif text-2xl text-white">Infinity Pool &amp; Sundeck</h3>
+        <p class="text-grey-200 text-sm mt-2 max-w-sm">Solar-heated pool with cabanas, open 6am – 9pm daily.</p>
+      </div>
+    </div>
+    <div class="relative h-96 overflow-hidden group reveal">
+      <img src="{% static 'images/relaxation-area.jpg' %}" alt="Relaxation Area" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+      <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent"></div>
+      <div class="absolute bottom-0 p-8">
+        <i data-lucide="flower-2" class="w-6 h-6 text-gold-400 mb-3"></i>
+        <h3 class="font-serif text-2xl text-white">Spa &amp; Relaxation Lounge</h3>
+        <p class="text-grey-200 text-sm mt-2 max-w-sm">Open-air lounge for massages, evening cocktails and quiet reflection.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div class="text-center p-8 border border-grey-100 hover:border-gold-300 transition-colors reveal">
+      <i data-lucide="dumbbell" class="w-6 h-6 text-gold-500 mx-auto mb-4"></i>
+      <p class="text-sm font-semibold">Fitness Gym</p>
+    </div>
+    <div class="text-center p-8 border border-grey-100 hover:border-gold-300 transition-colors reveal">
+      <i data-lucide="wifi" class="w-6 h-6 text-gold-500 mx-auto mb-4"></i>
+      <p class="text-sm font-semibold">Starlink</p>
+    </div>
+    <div class="text-center p-8 border border-grey-100 hover:border-gold-300 transition-colors reveal">
+      <i data-lucide="presentation" class="w-6 h-6 text-gold-500 mx-auto mb-4"></i>
+      <p class="text-sm font-semibold">Conference Hall</p>
+    </div>
+    <div class="text-center p-8 border border-grey-100 hover:border-gold-300 transition-colors reveal">
+      <i data-lucide="battery-charging" class="w-6 h-6 text-gold-500 mx-auto mb-4"></i>
+      <p class="text-sm font-semibold">24/7 Power Backup</p>
+    </div>
+  </div>
+  <div class="text-center mt-10 reveal">
+    <a href="{% url 'amenities:list' %}" class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide border-b-2 border-gold-400 pb-1 hover:text-gold-600">
+      Explore All Amenities <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+</section>
+
+<!-- ============ EVENTS ============ -->
+<section class="py-24 bg-grey-50">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+    <div class="order-2 lg:order-1 reveal">
+      <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">Celebrations &amp; Business</p>
+      <h2 class="font-serif text-3xl md:text-5xl mb-6">Events &amp; Conferences</h2>
+      <p class="text-grey-600 leading-relaxed mb-8">From boardroom strategy sessions to 600-guest weddings, our Grand Event Hall and Conference Room are built for occasions that matter. Submit an inquiry and receive a tailored quote within 24 hours.</p>
+      <div class="grid grid-cols-2 gap-6 mb-9">
+        <div>
+          <p class="font-serif text-3xl text-ink">600</p>
+          <p class="text-xs uppercase tracking-widest2 text-grey-500 mt-1">Grand Hall Capacity</p>
+        </div>
+        <div>
+          <p class="font-serif text-3xl text-ink">80</p>
+          <p class="text-xs uppercase tracking-widest2 text-grey-500 mt-1">Boardroom Capacity</p>
+        </div>
+      </div>
+      <a href="{% url 'events:list' %}" class="inline-flex items-center gap-2 bg-ink text-white uppercase text-sm font-semibold tracking-wide px-7 py-3.5 hover:bg-gold-500 hover:text-ink transition-colors">
+        Request a Quote <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+    <div class="order-1 lg:order-2 grid grid-cols-2 gap-4 reveal">
+      <img src="{% static 'images/event-hall.jpg' %}" alt="Grand Event Hall" class="w-full h-[420px] object-cover col-span-2">
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY PREVIEW ============ -->
+<section class="py-24 max-w-7xl mx-auto px-5 lg:px-8">
+  <div class="flex flex-wrap items-end justify-between gap-6 mb-14 reveal">
+    <div>
+      <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">Visual Tour</p>
+      <h2 class="font-serif text-3xl md:text-5xl">Gallery</h2>
+    </div>
+    <a href="{% url 'gallery:gallery' %}" class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide border-b-2 border-gold-400 pb-1 hover:text-gold-600">
+      View Full Gallery <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <img src="{% static 'images/building.jpg' %}" class="h-40 md:h-64 w-full object-cover reveal" alt="Hotel exterior">
+    <img src="{% static 'images/exclusive-room.jpg' %}" class="h-40 md:h-64 w-full object-cover reveal" alt="Exclusive suite">
+    <img src="{% static 'images/event-hall.jpg' %}" class="h-40 md:h-64 w-full object-cover reveal" alt="Event hall">
+    <img src="{% static 'images/poolside.jpg' %}" class="h-40 md:h-64 w-full object-cover reveal" alt="Pool">
+    <img src="{% static 'images/restaurant.jpg' %}" class="h-40 md:h-64 w-full object-cover reveal" alt="Restaurant">
+    <img src="{% static 'images/standard-room.jpg' %}" class="h-40 md:h-64 w-full object-cover reveal" alt="Standard room">
+    <img src="{% static 'images/relaxation-area.jpg' %}" class="h-40 md:h-64 w-full object-cover reveal" alt="Relaxation area">
+    <img src="{% static 'images/logo.png' %}" class="h-40 md:h-64 w-full object-contain bg-ink p-8 reveal" alt="Xceptional Place logo">
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="py-24 bg-ink text-white">
+  <div class="max-w-5xl mx-auto px-5 lg:px-8 text-center reveal">
+    <p class="uppercase tracking-widest2 text-gold-400 text-xs mb-4">Guest Voices</p>
+    <h2 class="font-serif text-3xl md:text-5xl mb-14">What Our Guests Say</h2>
+  </div>
+  <div class="max-w-6xl mx-auto px-5 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+    {% for t in testimonials %}
+    <div class="bg-white/5 border border-white/10 p-8 reveal">
+      <div class="flex gap-0.5 mb-4">
+        {% for i in t.stars_range %}<i data-lucide="star" class="w-4 h-4 fill-gold-400 text-gold-400"></i>{% endfor %}
+      </div>
+      <p class="text-grey-200 text-sm leading-relaxed mb-6">&ldquo;{{ t.comment }}&rdquo;</p>
+      <p class="font-semibold text-sm">{{ t.guest_name }}</p>
+      <p class="text-xs text-grey-500">{{ t.room_stayed }}{% if t.location %} &middot; {{ t.location }}{% endif %}</p>
+    </div>
+    {% empty %}
+    <div class="bg-white/5 border border-white/10 p-8 reveal md:col-span-3 text-center text-grey-400">Guest reviews will appear here after checkout.</div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ============ BLOG PREVIEW ============ -->
+{% if blog_posts %}
+<section class="py-24 max-w-7xl mx-auto px-5 lg:px-8">
+  <div class="flex flex-wrap items-end justify-between gap-6 mb-14 reveal">
+    <div>
+      <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">From the Blog</p>
+      <h2 class="font-serif text-3xl md:text-5xl">Stories &amp; Guides</h2>
+    </div>
+    <a href="{% url 'blog:list' %}" class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide border-b-2 border-gold-400 pb-1 hover:text-gold-600">
+      Read The Blog <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    {% for post in blog_posts %}
+    <a href="{{ post.get_absolute_url }}" class="group reveal">
+      <div class="h-56 overflow-hidden mb-5">
+        {% if post.cover_image %}
+        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+        {% else %}
+        <img src="{% static 'images/building.jpg' %}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+        {% endif %}
+      </div>
+      <p class="text-[11px] uppercase tracking-widest2 text-gold-600 mb-2">{{ post.get_category_display }}</p>
+      <h3 class="font-serif text-xl leading-snug group-hover:text-gold-600 transition-colors">{{ post.title }}</h3>
+      <p class="text-sm text-grey-500 mt-2">{{ post.excerpt|truncatewords:16 }}</p>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- ============ LOCATION STRIP ============ -->
+<section class="py-24 bg-grey-50">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+    <div class="reveal">
+      <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">Find Us</p>
+      <h2 class="font-serif text-3xl md:text-5xl mb-6">Rayfield, Jos, Plateau State</h2>
+      <p class="text-grey-600 leading-relaxed mb-8">Xceptional Place Hotel sits at the Atiku Street Junction in Rayfield, Jos's most tranquil, well-connected district. Minutes from Rayfield Park, corporate offices and the city centre.</p>
+      <ul class="space-y-3 text-sm text-grey-700 mb-9">
+        <li class="flex gap-3"><i data-lucide="map-pin" class="w-4 h-4 text-gold-500 mt-0.5"></i> Atiku Abubakar Street Junction, Rayfield, Jos</li>
+        <li class="flex gap-3"><i data-lucide="plane" class="w-4 h-4 text-gold-500 mt-0.5"></i> 25 minutes from Yakubu Gowon Airport</li>
+        <li class="flex gap-3"><i data-lucide="shield" class="w-4 h-4 text-gold-500 mt-0.5"></i> Gated, secured compound with 24/7 CCTV &amp; power backup</li>
+      </ul>
+      <a href="{% url 'core:about' %}" class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide border-b-2 border-gold-400 pb-1 hover:text-gold-600">
+        More About Us <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+    <div class="reveal">
+      <img src="{% static 'images/building.jpg' %}" alt="Xceptional Place Hotel" class="w-full h-[420px] object-cover">
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="relative py-28 overflow-hidden">
+  <img src="{% static 'images/exclusive-room.jpg' %}" class="absolute inset-0 w-full h-full object-cover" alt="">
+  <div class="absolute inset-0 bg-ink/85"></div>
+  <div class="relative max-w-3xl mx-auto px-5 text-center reveal">
+    <h2 class="font-serif text-3xl md:text-5xl text-white mb-6">Your Exceptional Stay Begins Here</h2>
+    <p class="text-grey-300 mb-10">Real-time availability. Instant confirmation. AI-powered service, from booking to check-out.</p>
+    <a href="{% url 'bookings:book' %}" class="inline-flex items-center gap-2 bg-gold-400 text-ink font-semibold uppercase text-sm tracking-wide px-9 py-4 hover:bg-white transition-colors">
+      Book Now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+</section>
+
+{% endblock %}

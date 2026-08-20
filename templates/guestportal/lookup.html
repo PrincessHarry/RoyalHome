@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}My Stay | Xceptional Place Hotel{% endblock %}
+{% block content %}
+
+<section class="max-w-xl mx-auto px-5 py-24">
+  <div class="text-center mb-12">
+    <div class="w-14 h-14 bg-ink text-gold-400 flex items-center justify-center mx-auto mb-6"><i data-lucide="qr-code" class="w-6 h-6"></i></div>
+    <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">In-Stay Services</p>
+    <h1 class="font-serif text-3xl md:text-4xl">My Stay Portal</h1>
+    <p class="text-grey-600 mt-4">Enter your booking reference to order food, laundry, housekeeping and more — no app needed.</p>
+  </div>
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="bg-red-50 border border-red-200 text-red-700 text-sm px-5 py-4 mb-8 flex items-center gap-3">
+    <i data-lucide="alert-circle" class="w-5 h-5"></i> {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <form method="post" class="bg-grey-50 p-8 space-y-6">
+    {% csrf_token %}
+    <div>
+      <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Booking Reference Code</label>
+      <input required type="text" name="reference_code" placeholder="XPH-XXXXXXX" class="w-full border border-grey-300 px-4 py-3.5 text-sm focus:outline-none focus:border-gold-400 bg-white uppercase">
+    </div>
+    <button type="submit" class="w-full bg-ink text-white uppercase text-sm font-semibold tracking-wide py-4 hover:bg-gold-500 hover:text-ink transition-colors flex items-center justify-center gap-2">
+      Access My Stay <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </button>
+  </form>
+  <p class="text-xs text-grey-400 text-center mt-6">Your reference code was sent by email and WhatsApp when you booked. At the hotel, simply scan the QR code in your room.</p>
+</section>
+
+{% endblock %}

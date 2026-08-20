@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Events &amp; Conferences | Xceptional Place Hotel{% endblock %}
+{% block content %}
+
+<section class="relative h-[50vh] min-h-[380px] overflow-hidden">
+  <img src="{% static 'images/event-hall.jpg' %}" class="absolute inset-0 w-full h-full object-cover" alt="Grand Event Hall">
+  <div class="absolute inset-0 bg-ink/60"></div>
+  <div class="relative h-full max-w-7xl mx-auto px-5 lg:px-8 flex flex-col justify-end pb-14">
+    <p class="uppercase tracking-widest2 text-gold-400 text-xs mb-4">Celebrations &amp; Business</p>
+    <h1 class="font-serif text-white text-4xl md:text-6xl">Events &amp; Conferences</h1>
+    <p class="text-grey-200 mt-4 max-w-lg">From intimate boardroom meetings to 600-guest weddings — spaces built for every occasion.</p>
+  </div>
+</section>
+
+<section class="max-w-7xl mx-auto px-5 lg:px-8 py-16">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="bg-gold-50 border border-gold-300 text-gold-800 text-sm px-5 py-4 mb-10 flex items-center gap-3">
+    <i data-lucide="check-circle" class="w-5 h-5"></i> {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
+    {% for space in spaces %}
+    <div class="border border-grey-100 card-hover">
+      <div class="h-40 md:h-64 overflow-hidden"><img src="{{ space.image.url }}" class="w-full h-full object-cover" alt="{{ space.name }}"></div>
+      <div class="p-7">
+        <h3 class="font-serif text-2xl mb-2">{{ space.name }}</h3>
+        <p class="text-sm text-grey-600 mb-5">{{ space.description }}</p>
+        <div class="flex gap-6 text-sm text-grey-700 mb-5">
+          <span class="flex items-center gap-2"><i data-lucide="armchair" class="w-4 h-4 text-gold-500"></i> {{ space.capacity_seated }} seated</span>
+          <span class="flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-gold-500"></i> {{ space.capacity_standing }} standing</span>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-5">
+          {% for f in space.features_list %}
+          <span class="text-[11px] uppercase tracking-wide border border-grey-200 px-2.5 py-1 text-grey-600">{{ f }}</span>
+          {% endfor %}
+        </div>
+        <p class="text-gold-600 font-semibold">From ₦{{ space.price_per_hour|floatformat:0 }}<span class="text-grey-400 text-xs font-normal">/hour</span></p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="max-w-3xl mx-auto text-center mb-12">
+    <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">Get a Custom Quote</p>
+    <h2 class="font-serif text-3xl md:text-4xl">Request an Inquiry</h2>
+    <p class="text-grey-600 mt-4">Tell us about your event and our team will send a tailored quote within 24 hours.</p>
+  </div>
+
+  <form method="post" class="max-w-3xl mx-auto bg-grey-50 p-8 md:p-10 space-y-6">
+    {% csrf_token %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Full Name</label>
+        <input required type="text" name="full_name" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+      </div>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Email</label>
+        <input required type="email" name="email" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Phone</label>
+        <input required type="text" name="phone" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+      </div>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Event Type</label>
+        <select name="event_type" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+          <option value="wedding">Wedding</option>
+          <option value="conference">Conference / Business Meeting</option>
+          <option value="birthday">Birthday / Anniversary</option>
+          <option value="corporate">Corporate Retreat</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Preferred Space</label>
+        <select name="event_space" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+          <option value="">No preference</option>
+          {% for space in spaces %}<option value="{{ space.id }}">{{ space.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Preferred Date</label>
+        <input required type="date" name="preferred_date" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+      </div>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Guest Count</label>
+        <input required type="number" min="1" name="guest_count" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+      </div>
+    </div>
+    <div>
+      <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Tell Us More</label>
+      <textarea name="message" rows="4" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white"></textarea>
+    </div>
+    <button type="submit" class="inline-flex items-center gap-2 bg-ink text-white uppercase text-sm font-semibold tracking-wide px-8 py-4 hover:bg-gold-500 hover:text-ink transition-colors">
+      Submit Inquiry <i data-lucide="send" class="w-4 h-4"></i>
+    </button>
+  </form>
+</section>
+
+{% endblock %}

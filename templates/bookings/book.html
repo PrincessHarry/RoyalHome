@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Book Your Stay | Xceptional Place Hotel{% endblock %}
+{% block content %}
+
+<section class="bg-ink py-14">
+  <div class="max-w-4xl mx-auto px-5 text-center">
+    <p class="uppercase tracking-widest2 text-gold-400 text-xs mb-3">Reservations</p>
+    <h1 class="font-serif text-white text-3xl md:text-5xl">Book Your Stay</h1>
+  </div>
+</section>
+
+<!-- Step indicator -->
+<div class="max-w-4xl mx-auto px-5 pt-10">
+  <div class="flex items-center justify-between" id="stepIndicator">
+    {% for s in "12345" %}
+    <div class="flex-1 flex items-center {% if not forloop.last %}pr-2{% endif %}">
+      <div class="step step-circle-wrap flex items-center gap-2 {% if forloop.first %}step-active{% endif %}" data-step="{{ forloop.counter }}">
+        <span class="step-circle w-8 h-8 rounded-full border border-grey-300 flex items-center justify-center text-xs font-semibold text-grey-500 shrink-0">{{ forloop.counter }}</span>
+        <span class="hidden sm:inline text-xs uppercase tracking-wide text-grey-500 step-label">
+          {% if forloop.counter == 1 %}Dates{% elif forloop.counter == 2 %}Room{% elif forloop.counter == 3 %}Guest Info{% elif forloop.counter == 4 %}Add-ons{% else %}Payment{% endif %}
+        </span>
+      </div>
+      {% if not forloop.last %}<div class="flex-1 h-px bg-grey-200 mx-2"></div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<form method="post" id="bookingForm" class="max-w-4xl mx-auto px-5 py-14">
+  {% csrf_token %}
+
+  <!-- STEP 1: DATES -->
+  <div class="booking-step" data-step="1">
+    <h2 class="font-serif text-2xl mb-8">Choose Your Dates</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Check-in Date</label>
+        <input required type="date" name="check_in" id="check_in" class="w-full border border-grey-300 px-4 py-3.5 text-sm focus:outline-none focus:border-gold-400">
+      </div>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Check-out Date</label>
+        <input required type="date" name="check_out" id="check_out" class="w-full border border-grey-300 px-4 py-3.5 text-sm focus:outline-none focus:border-gold-400">
+      </div>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Adults</label>
+        <input required type="number" min="1" max="8" name="adults" value="2" class="w-full border border-grey-300 px-4 py-3.5 text-sm focus:outline-none focus:border-gold-400">
+      </div>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Children</label>
+        <input type="number" min="0" max="6" name="children" value="0" class="w-full border border-grey-300 px-4 py-3.5 text-sm focus:outline-none focus:border-gold-400">
+      </div>
+    </div>
+    <div class="flex justify-end">
+      <button type="button" class="next-step bg-ink text-white uppercase text-sm font-semibold tracking-wide px-8 py-3.5 hover:bg-gold-500 hover:text-ink transition-colors flex items-center gap-2">
+        Continue <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 2: ROOM -->
+  <div class="booking-step hidden" data-step="2">
+    <h2 class="font-serif text-2xl mb-8">Select Your Room</h2>
+    <div class="space-y-4 mb-6">
+      {% for room in rooms %}
+      <label class="room-option flex flex-col sm:flex-row gap-5 border border-grey-200 p-5 cursor-pointer hover:border-gold-400 transition-colors">
+        <input type="radio" name="room_type" value="{{ room.id }}" class="sr-only room-radio" data-price="{{ room.base_price }}" data-name="{{ room.name }}" {% if preselected_room == room.id|stringformat:"s" %}checked{% endif %}>
+        {% if room.cover_image %}
+        <img src="{{ room.cover_image.url }}" class="w-full sm:w-40 h-32 object-cover shrink-0" alt="{{ room.name }}">
+        {% else %}
+        <img src="{% static 'images/standard-room.jpg' %}" class="w-full sm:w-40 h-32 object-cover shrink-0" alt="{{ room.name }}">
+        {% endif %}
+        <div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <p class="font-serif text-lg">{{ room.name }}</p>
+            <p class="text-xs text-grey-500 mt-1">{{ room.tagline }}</p>
+            <p class="text-xs text-grey-400 mt-1">{{ room.capacity_adults }} Adults &middot; {{ room.bed_type }}</p>
+          </div>
+          <p class="text-gold-600 font-semibold whitespace-nowrap">₦{{ room.base_price|floatformat:0 }}<span class="text-grey-400 text-xs font-normal">/night</span></p>
+        </div>
+      </label>
+      {% endfor %}
+    </div>
+    <div class="flex justify-between">
+      <button type="button" class="prev-step border border-grey-300 uppercase text-sm font-semibold tracking-wide px-8 py-3.5 hover:border-gold-400 hover:text-gold-600 transition-colors">Back</button>
+      <button type="button" class="next-step bg-ink text-white uppercase text-sm font-semibold tracking-wide px-8 py-3.5 hover:bg-gold-500 hover:text-ink transition-colors flex items-center gap-2">
+        Continue <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 3: GUEST DETAILS -->
+  <div class="booking-step hidden" data-step="3">
+    <h2 class="font-serif text-2xl mb-8">Guest Details</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div class="md:col-span-2">
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Full Name</label>
+        <input required type="text" name="full_name" class="w-full border border-grey-300 px-4 py-3.5 text-sm focus:outline-none focus:border-gold-400">
+      </div>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Email</label>
+        <input required type="email" name="email" class="w-full border border-grey-300 px-4 py-3.5 text-sm focus:outline-none focus:border-gold-400">
+      </div>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Phone / WhatsApp</label>
+        <input required type="text" name="phone" class="w-full border border-grey-300 px-4 py-3.5 text-sm focus:outline-none focus:border-gold-400">
+      </div>
+      <div class="md:col-span-2">
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Special Requests (optional)</label>
+        <textarea name="special_requests" rows="3" class="w-full border border-grey-300 px-4 py-3.5 text-sm focus:outline-none focus:border-gold-400"></textarea>
+      </div>
+    </div>
+    <div class="flex justify-between">
+      <button type="button" class="prev-step border border-grey-300 uppercase text-sm font-semibold tracking-wide px-8 py-3.5 hover:border-gold-400 hover:text-gold-600 transition-colors">Back</button>
+      <button type="button" class="next-step bg-ink text-white uppercase text-sm font-semibold tracking-wide px-8 py-3.5 hover:bg-gold-500 hover:text-ink transition-colors flex items-center gap-2">
+        Continue <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 4: ADD-ONS -->
+  <div class="booking-step hidden" data-step="4">
+    <h2 class="font-serif text-2xl mb-8">Enhance Your Stay</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+      {% for addon in addons %}
+      <label class="flex items-center justify-between gap-3 border border-grey-200 p-5 cursor-pointer hover:border-gold-400 transition-colors">
+        <span class="flex items-center gap-3">
+          <input type="checkbox" name="addons" value="{{ addon.id }}" class="addon-check w-4 h-4 accent-gold-500" data-price="{{ addon.price }}">
+          <span>
+            <span class="block text-sm font-semibold">{{ addon.name }}</span>
+            <span class="block text-xs text-grey-500">{{ addon.description }}</span>
+          </span>
+        </span>
+        <span class="text-sm text-gold-600 font-semibold whitespace-nowrap">+₦{{ addon.price|floatformat:0 }}</span>
+      </label>
+      {% endfor %}
+    </div>
+    <div class="flex justify-between">
+      <button type="button" class="prev-step border border-grey-300 uppercase text-sm font-semibold tracking-wide px-8 py-3.5 hover:border-gold-400 hover:text-gold-600 transition-colors">Back</button>
+      <button type="button" class="next-step bg-ink text-white uppercase text-sm font-semibold tracking-wide px-8 py-3.5 hover:bg-gold-500 hover:text-ink transition-colors flex items-center gap-2">
+        Continue <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 5: PAYMENT -->
+  <div class="booking-step hidden" data-step="5">
+    <h2 class="font-serif text-2xl mb-8">Review &amp; Payment</h2>
+
+    <div class="bg-grey-50 p-6 mb-8 space-y-3 text-sm">
+      <div class="flex justify-between"><span class="text-grey-500">Room</span><span id="summaryRoom" class="font-medium">—</span></div>
+      <div class="flex justify-between"><span class="text-grey-500">Dates</span><span id="summaryDates" class="font-medium">—</span></div>
+      <div class="flex justify-between"><span class="text-grey-500">Nights</span><span id="summaryNights" class="font-medium">—</span></div>
+      <div class="flex justify-between"><span class="text-grey-500">Room Total</span><span id="summaryRoomTotal" class="font-medium">₦0</span></div>
+      <div class="flex justify-between"><span class="text-grey-500">Add-ons</span><span id="summaryAddonTotal" class="font-medium">₦0</span></div>
+      <div class="flex justify-between text-base border-t border-grey-200 pt-3 mt-2"><span class="font-serif">Grand Total</span><span id="summaryGrandTotal" class="font-serif text-gold-600">₦0</span></div>
+    </div>
+
+    <p class="text-[11px] uppercase tracking-widest2 text-grey-500 mb-3">Payment Method</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+      <label class="flex items-center gap-3 border border-grey-200 p-5 cursor-pointer hover:border-gold-400">
+        <input type="radio" name="payment_method" value="Paystack" checked class="w-4 h-4 accent-gold-500">
+        <span class="text-sm"><span class="block font-semibold">Pay Now via Paystack</span><span class="block text-xs text-grey-500">Card, Bank Transfer, USSD — Naira</span></span>
+      </label>
+      <label class="flex items-center gap-3 border border-grey-200 p-5 cursor-pointer hover:border-gold-400">
+        <input type="radio" name="payment_method" value="Pay at Hotel" class="w-4 h-4 accent-gold-500">
+        <span class="text-sm"><span class="block font-semibold">Pay at Hotel</span><span class="block text-xs text-grey-500">Reserve now, pay on arrival</span></span>
+      </label>
+    </div>
+
+    <div class="flex justify-between">
+      <button type="button" class="prev-step border border-grey-300 uppercase text-sm font-semibold tracking-wide px-8 py-3.5 hover:border-gold-400 hover:text-gold-600 transition-colors">Back</button>
+      <button type="submit" class="bg-gold-400 text-ink uppercase text-sm font-semibold tracking-wide px-9 py-3.5 hover:bg-ink hover:text-white transition-colors flex items-center gap-2">
+        Confirm Booking <i data-lucide="check" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const steps = document.querySelectorAll('.booking-step');
+  const indicators = document.querySelectorAll('.step-circle-wrap');
+  let current = 1;
+
+  function showStep(n) {
+    steps.forEach(s => s.classList.toggle('hidden', parseInt(s.dataset.step) !== n));
+    indicators.forEach(ind => {
+      const step = parseInt(ind.dataset.step);
+      ind.classList.remove('step-active', 'step-done');
+      if (step === n) ind.classList.add('step-active');
+      else if (step < n) ind.classList.add('step-done');
+    });
+    current = n;
+    window.scrollTo({ top: document.getElementById('bookingForm').offsetTop - 100, behavior: 'smooth' });
+    if (n === 5) updateSummary();
+  }
+
+  function validateStep(n) {
+    const stepEl = document.querySelector(`.booking-step[data-step="${n}"]`);
+    const inputs = stepEl.querySelectorAll('[required]');
+    for (const input of inputs) {
+      if (!input.value) { input.reportValidity(); return false; }
+    }
+    if (n === 2) {
+      const checked = document.querySelector('.room-radio:checked');
+      if (!checked) { alert('Please select a room to continue.'); return false; }
+    }
+    return true;
+  }
+
+  document.querySelectorAll('.next-step').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (validateStep(current)) showStep(Math.min(current + 1, 5));
+    });
+  });
+  document.querySelectorAll('.prev-step').forEach(btn => {
+    btn.addEventListener('click', () => showStep(Math.max(current - 1, 1)));
+  });
+
+  function nights() {
+    const ci = document.getElementById('check_in').value;
+    const co = document.getElementById('check_out').value;
+    if (!ci || !co) return 1;
+    const d = (new Date(co) - new Date(ci)) / (1000 * 60 * 60 * 24);
+    return d > 0 ? d : 1;
+  }
+
+  function currency(n) {
+    return '₦' + Number(n).toLocaleString('en-NG', { maximumFractionDigits: 0 });
+  }
+
+  function updateSummary() {
+    const roomChecked = document.querySelector('.room-radio:checked');
+    const n = nights();
+    const roomPrice = roomChecked ? parseFloat(roomChecked.dataset.price) : 0;
+    const roomTotal = roomPrice * n;
+    let addonTotal = 0;
+    document.querySelectorAll('.addon-check:checked').forEach(c => addonTotal += parseFloat(c.dataset.price));
+
+    document.getElementById('summaryRoom').textContent = roomChecked ? roomChecked.dataset.name : '—';
+    document.getElementById('summaryDates').textContent = `${document.getElementById('check_in').value || '—'} to ${document.getElementById('check_out').value || '—'}`;
+    document.getElementById('summaryNights').textContent = n;
+    document.getElementById('summaryRoomTotal').textContent = currency(roomTotal);
+    document.getElementById('summaryAddonTotal').textContent = currency(addonTotal);
+    document.getElementById('summaryGrandTotal').textContent = currency(roomTotal + addonTotal);
+  }
+
+  document.querySelectorAll('.addon-check, .room-radio').forEach(el => el.addEventListener('change', updateSummary));
+
+  // preselect from query string
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('check_in')) document.getElementById('check_in').value = params.get('check_in');
+  if (params.get('check_out')) document.getElementById('check_out').value = params.get('check_out');
+});
+</script>
+{% endblock %}

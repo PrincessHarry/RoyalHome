@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Booking Confirmed | Xceptional Place Hotel{% endblock %}
+{% block content %}
+
+<section class="max-w-3xl mx-auto px-5 py-24 text-center">
+  <div class="w-16 h-16 rounded-full bg-gold-50 border border-gold-300 flex items-center justify-center mx-auto mb-8">
+    <i data-lucide="check" class="w-7 h-7 text-gold-600"></i>
+  </div>
+  <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">Booking Confirmed</p>
+  <h1 class="font-serif text-3xl md:text-5xl mb-4">Thank You, {{ booking.full_name|default:"Guest" }}</h1>
+  <p class="text-grey-600 mb-10">A confirmation has been sent to {{ booking.email }} and via WhatsApp to {{ booking.phone }}.</p>
+
+  <div class="bg-grey-50 border border-grey-200 p-8 md:p-10 text-left mb-10">
+    <div class="flex items-center justify-between border-b border-grey-200 pb-6 mb-6">
+      <div>
+        <p class="text-xs uppercase tracking-widest2 text-grey-500 mb-1">Reference Code</p>
+        <p class="font-serif text-2xl text-gold-600">{{ booking.reference_code }}</p>
+      </div>
+      <i data-lucide="qr-code" class="w-14 h-14 text-ink"></i>
+    </div>
+    <div class="grid grid-cols-2 gap-6 text-sm">
+      <div><p class="text-grey-500 mb-1">Room</p><p class="font-medium">{{ booking.room_type.name }}</p></div>
+      <div><p class="text-grey-500 mb-1">Status</p><p class="font-medium capitalize">{{ booking.status }}</p></div>
+      <div><p class="text-grey-500 mb-1">Check-in</p><p class="font-medium">{{ booking.check_in }}</p></div>
+      <div><p class="text-grey-500 mb-1">Check-out</p><p class="font-medium">{{ booking.check_out }}</p></div>
+      <div><p class="text-grey-500 mb-1">Guests</p><p class="font-medium">{{ booking.adults }} Adults, {{ booking.children }} Children</p></div>
+      <div><p class="text-grey-500 mb-1">Payment</p><p class="font-medium">{{ booking.get_payment_status_display }} &middot; {{ booking.payment_method }}</p></div>
+      {% if booking.addons.all %}
+      <div class="col-span-2"><p class="text-grey-500 mb-1">Add-ons</p><p class="font-medium">{% for a in booking.addons.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p></div>
+      {% endif %}
+      <div class="col-span-2 border-t border-grey-200 pt-4 flex justify-between items-baseline">
+        <p class="font-serif text-lg">Grand Total</p>
+        <p class="font-serif text-2xl text-gold-600">₦{{ booking.grand_total|floatformat:0 }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap justify-center gap-4">
+    <a href="{% url 'guestportal:dashboard' booking.reference_code %}" class="inline-flex items-center gap-2 bg-ink text-white uppercase text-sm font-semibold tracking-wide px-8 py-4 hover:bg-gold-500 hover:text-ink transition-colors">
+      Open My Stay Portal <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+    <a href="{% url 'bookings:manage_detail' booking.reference_code %}" class="inline-flex items-center gap-2 border border-grey-300 uppercase text-sm font-semibold tracking-wide px-8 py-4 hover:border-gold-400 hover:text-gold-600 transition-colors">
+      Manage Booking
+    </a>
+  </div>
+</section>
+
+{% endblock %}

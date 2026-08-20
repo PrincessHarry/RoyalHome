@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Contact Us | Xceptional Place Hotel{% endblock %}
+{% block content %}
+
+<section class="max-w-7xl mx-auto px-5 lg:px-8 py-20">
+  <div class="text-center mb-16">
+    <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-4">Get In Touch</p>
+    <h1 class="font-serif text-3xl md:text-5xl">Contact &amp; Inquiries</h1>
+    <p class="text-grey-600 mt-4 max-w-xl mx-auto">Questions about a booking, an event, or just want to say hello? Our team responds within 24 hours.</p>
+  </div>
+
+  {% if messages %}
+  <div class="max-w-xl mx-auto mb-10">
+    {% for message in messages %}
+    <div class="bg-gold-50 border border-gold-300 text-gold-800 text-sm px-5 py-4 flex items-center gap-3">
+      <i data-lucide="check-circle" class="w-5 h-5"></i> {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-14">
+    <div class="lg:col-span-2 space-y-8">
+      <div class="flex gap-4">
+        <div class="w-11 h-11 bg-ink text-gold-400 flex items-center justify-center shrink-0"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
+        <div>
+          <p class="font-semibold text-sm">Address</p>
+          <p class="text-sm text-grey-600 mt-1">Atiku Abubakar Street Junction, Rayfield, Jos, Plateau State</p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="w-11 h-11 bg-ink text-gold-400 flex items-center justify-center shrink-0"><i data-lucide="phone" class="w-5 h-5"></i></div>
+        <div>
+          <p class="font-semibold text-sm">Phone &amp; WhatsApp</p>
+          <p class="text-sm text-grey-600 mt-1">+234 803 000 1122</p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="w-11 h-11 bg-ink text-gold-400 flex items-center justify-center shrink-0"><i data-lucide="mail" class="w-5 h-5"></i></div>
+        <div>
+          <p class="font-semibold text-sm">Email</p>
+          <p class="text-sm text-grey-600 mt-1">reservations@xceptionalplacehotel.com</p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="w-11 h-11 bg-ink text-gold-400 flex items-center justify-center shrink-0"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+        <div>
+          <p class="font-semibold text-sm">AI Concierge</p>
+          <p class="text-sm text-grey-600 mt-1">Available 24/7 via the chat button below, or on WhatsApp.</p>
+        </div>
+      </div>
+    </div>
+
+    <form method="post" class="lg:col-span-3 bg-grey-50 p-8 md:p-10 space-y-6">
+      {% csrf_token %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Full Name</label>
+          <input required type="text" name="name" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+        </div>
+        <div>
+          <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Email</label>
+          <input required type="email" name="email" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Phone</label>
+          <input type="text" name="phone" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+        </div>
+        <div>
+          <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Subject</label>
+          <select name="subject" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white">
+            <option value="booking">Booking Question</option>
+            <option value="events">Events &amp; Conferences</option>
+            <option value="feedback">Feedback</option>
+            <option value="partnership">Partnership / Corporate</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest2 text-grey-500 mb-2">Message</label>
+        <textarea required name="message" rows="5" class="w-full border border-grey-300 px-4 py-3 text-sm focus:outline-none focus:border-gold-400 bg-white"></textarea>
+      </div>
+      <button type="submit" class="inline-flex items-center gap-2 bg-ink text-white uppercase text-sm font-semibold tracking-wide px-8 py-4 hover:bg-gold-500 hover:text-ink transition-colors">
+        Send Message <i data-lucide="send" class="w-4 h-4"></i>
+      </button>
+    </form>
+  </div>
+</section>
+
+{% endblock %}

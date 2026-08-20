@@ -1,0 +1,48 @@
+{% load static %}
+<header class="relative z-50 bg-white/95 border-b border-grey-200 h-20">
+  <div class="max-w-7xl mx-auto pl-4 md:pl-20 lg:pl-24 px-5 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <a href="{% url 'core:home' %}" class="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-3">
+        <img src="{% static 'images/logo.png' %}" alt="Xceptional Place Hotel" class="h-20 w-auto">
+      </a>
+
+      <nav class="hidden xl:flex items-center gap-8 text-[13px] font-medium tracking-wide uppercase text-grey-700">
+        <a href="{% url 'rooms:list' %}" class="hover:text-gold-500 transition-colors">Rooms &amp; Suites</a>
+        <a href="{% url 'restaurant:menu' %}" class="hover:text-gold-500 transition-colors">Restaurant</a>
+        <a href="{% url 'amenities:list' %}" class="hover:text-gold-500 transition-colors">Amenities</a>
+        <a href="{% url 'events:list' %}" class="hover:text-gold-500 transition-colors">Events</a>
+        <a href="{% url 'gallery:gallery' %}" class="hover:text-gold-500 transition-colors">Gallery</a>
+        <a href="{% url 'blog:list' %}" class="hover:text-gold-500 transition-colors">Blog</a>
+        <a href="{% url 'core:about' %}" class="hover:text-gold-500 transition-colors">About</a>
+        <a href="{% url 'core:contact' %}" class="hover:text-gold-500 transition-colors">Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="{% url 'guestportal:lookup' %}" class="hidden lg:flex items-center gap-1.5 text-[13px] font-medium text-grey-700 hover:text-ink transition-colors">
+          <i data-lucide="qr-code" class="w-4 h-4"></i> My Stay
+        </a>
+        <a href="{% url 'bookings:book' %}" class="hidden sm:inline-flex items-center gap-2 bg-ink text-white text-[13px] font-semibold tracking-wide uppercase px-6 py-3 hover:bg-gold-500 hover:text-ink transition-colors">
+          Book Now
+        </a>
+        <button id="mobileMenuBtn" class="xl:hidden absolute right-4 top-1/2 -translate-y-1/2 p-2 text-ink z-50">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="xl:hidden hidden border-t border-grey-200 bg-white">
+    <nav class="flex flex-col px-5 py-4 gap-1 text-sm font-medium uppercase tracking-wide text-grey-700">
+      <a href="{% url 'rooms:list' %}" class="py-2.5 border-b border-grey-100">Rooms &amp; Suites</a>
+      <a href="{% url 'restaurant:menu' %}" class="py-2.5 border-b border-grey-100">Restaurant</a>
+      <a href="{% url 'amenities:list' %}" class="py-2.5 border-b border-grey-100">Amenities</a>
+      <a href="{% url 'events:list' %}" class="py-2.5 border-b border-grey-100">Events</a>
+      <a href="{% url 'gallery:gallery' %}" class="py-2.5 border-b border-grey-100">Gallery</a>
+      <a href="{% url 'blog:list' %}" class="py-2.5 border-b border-grey-100">Blog</a>
+      <a href="{% url 'core:about' %}" class="py-2.5 border-b border-grey-100">About</a>
+      <a href="{% url 'core:contact' %}" class="py-2.5 border-b border-grey-100">Contact</a>
+      <a href="{% url 'guestportal:lookup' %}" class="py-2.5 border-b border-grey-100">My Stay Portal</a>
+      <a href="{% url 'bookings:book' %}" class="mt-3 text-center bg-ink text-white py-3">Book Now</a>
+    </nav>
+  </div>
+</header>

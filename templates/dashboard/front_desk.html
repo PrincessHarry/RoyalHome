@@ -1,0 +1,66 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block title %}Front Desk | Staff Dashboard{% endblock %}
+{% block content %}
+
+<div class="mb-10">
+  <p class="uppercase tracking-widest2 text-gold-600 text-xs mb-2">Front Desk</p>
+  <h1 class="font-serif text-3xl">Bookings &amp; Check-in / Check-out</h1>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+  <div class="bg-white border border-grey-200 p-6">
+    <h2 class="font-serif text-lg mb-4 flex items-center gap-2"><i data-lucide="log-in" class="w-4 h-4 text-gold-500"></i> Today's Arrivals</h2>
+    {% for b in arrivals %}
+    <div class="flex items-center justify-between text-sm border-b border-grey-50 py-2.5">
+      <span>{{ b.full_name }} — {{ b.room_type.name }}</span>
+      <form method="post" action="{% url 'dashboard:update_booking_status' b.id %}"><input type="hidden" name="status" value="checked_in">{% csrf_token %}
+      <button class="text-[10px] uppercase text-gold-600 hover:underline">Check In</button></form>
+    </div>
+    {% empty %}<p class="text-xs text-grey-400">No arrivals today.</p>{% endfor %}
+  </div>
+  <div class="bg-white border border-grey-200 p-6">
+    <h2 class="font-serif text-lg mb-4 flex items-center gap-2"><i data-lucide="log-out" class="w-4 h-4 text-gold-500"></i> Today's Departures</h2>
+    {% for b in departures %}
+    <div class="flex items-center justify-between text-sm border-b border-grey-50 py-2.5">
+      <span>{{ b.full_name }} — {{ b.room_type.name }}</span>
+      <form method="post" action="{% url 'dashboard:update_booking_status' b.id %}"><input type="hidden" name="status" value="checked_out">{% csrf_token %}
+      <button class="text-[10px] uppercase text-gold-600 hover:underline">Check Out</button></form>
+    </div>
+    {% empty %}<p class="text-xs text-grey-400">No departures today.</p>{% endfor %}
+  </div>
+  <div class="bg-white border border-grey-200 p-6">
+    <h2 class="font-serif text-lg mb-4 flex items-center gap-2"><i data-lucide="door-open" class="w-4 h-4 text-gold-500"></i> In-House Guests</h2>
+    {% for b in in_house %}
+    <div class="text-sm border-b border-grey-50 py-2.5">{{ b.full_name }} — {{ b.room_type.name }}</div>
+    {% empty %}<p class="text-xs text-grey-400">No guests currently checked in.</p>{% endfor %}
+  </div>
+</div>
+
+<div class="bg-white border border-grey-200 p-6">
+  <h2 class="font-serif text-xl mb-6">All Bookings</h2>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead><tr class="text-left text-[11px] uppercase tracking-widest2 text-grey-400 border-b border-grey-100">
+        <th class="pb-3">Reference</th><th class="pb-3">Guest</th><th class="pb-3">Room</th><th class="pb-3">Check-in</th><th class="pb-3">Check-out</th><th class="pb-3">Status</th><th class="pb-3">Payment</th><th class="pb-3">Total</th>
+      </tr></thead>
+      <tbody>
+        {% for b in all_bookings %}
+        <tr class="border-b border-grey-50">
+          <td class="py-3 font-medium">{{ b.reference_code }}</td>
+          <td class="py-3">{{ b.full_name }}</td>
+          <td class="py-3">{{ b.room_type.name }}</td>
+          <td class="py-3 text-grey-500">{{ b.check_in }}</td>
+          <td class="py-3 text-grey-500">{{ b.check_out }}</td>
+          <td class="py-3"><span class="text-[10px] uppercase px-2 py-1 bg-grey-100">{{ b.get_status_display }}</span></td>
+          <td class="py-3"><span class="text-[10px] uppercase px-2 py-1 {% if b.payment_status == 'paid' %}bg-green-50 text-green-700{% else %}bg-gold-50 text-gold-700{% endif %}">{{ b.get_payment_status_display }}</span></td>
+          <td class="py-3 font-medium">₦{{ b.grand_total|floatformat:0 }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="py-6 text-grey-400 text-center">No bookings yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

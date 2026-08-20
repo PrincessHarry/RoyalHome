@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Booking {{ booking.reference_code }} | Xceptional Place Hotel{% endblock %}
+{% block content %}
+
+<section class="max-w-3xl mx-auto px-5 py-20">
+  <div class="flex items-center justify-between mb-10">
+    <div>
+      <p class="uppercase tracking-widest2 text-gold-500 text-xs mb-2">Booking Reference</p>
+      <h1 class="font-serif text-3xl">{{ booking.reference_code }}</h1>
+    </div>
+    <span class="px-4 py-1.5 text-xs uppercase tracking-wide font-semibold
+      {% if booking.status == 'confirmed' %}bg-gold-50 text-gold-700 border border-gold-300
+      {% elif booking.status == 'cancelled' %}bg-red-50 text-red-600 border border-red-200
+      {% elif booking.status == 'checked_in' %}bg-green-50 text-green-700 border border-green-200
+      {% else %}bg-grey-100 text-grey-600 border border-grey-200{% endif %}">
+      {{ booking.get_status_display }}
+    </span>
+  </div>
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="bg-gold-50 border border-gold-300 text-gold-800 text-sm px-5 py-4 mb-8 flex items-center gap-3">
+    <i data-lucide="check-circle" class="w-5 h-5"></i> {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="bg-grey-50 border border-grey-200 p-8 grid grid-cols-2 gap-6 text-sm mb-8">
+    <div><p class="text-grey-500 mb-1">Guest</p><p class="font-medium">{{ booking.full_name }}</p></div>
+    <div><p class="text-grey-500 mb-1">Room</p><p class="font-medium">{{ booking.room_type.name }}</p></div>
+    <div><p class="text-grey-500 mb-1">Check-in</p><p class="font-medium">{{ booking.check_in }}</p></div>
+    <div><p class="text-grey-500 mb-1">Check-out</p><p class="font-medium">{{ booking.check_out }}</p></div>
+    <div><p class="text-grey-500 mb-1">Guests</p><p class="font-medium">{{ booking.adults }} Adults, {{ booking.children }} Children</p></div>
+    <div><p class="text-grey-500 mb-1">Payment</p><p class="font-medium">{{ booking.get_payment_status_display }}</p></div>
+    <div class="col-span-2 border-t border-grey-200 pt-4 flex justify-between">
+      <p class="font-serif text-lg">Grand Total</p>
+      <p class="font-serif text-lg text-gold-600">₦{{ booking.grand_total|floatformat:0 }}</p>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-4">
+    <a href="{% url 'guestportal:dashboard' booking.reference_code %}" class="inline-flex items-center gap-2 bg-ink text-white uppercase text-sm font-semibold tracking-wide px-7 py-3.5 hover:bg-gold-500 hover:text-ink transition-colors">
+      Open My Stay Portal
+    </a>
+    {% if booking.status != 'cancelled' and booking.status != 'checked_out' %}
+    <form method="post" action="{% url 'bookings:cancel' booking.reference_code %}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+      {% csrf_token %}
+      <button type="submit" class="inline-flex items-center gap-2 border border-red-300 text-red-600 uppercase text-sm font-semibold tracking-wide px-7 py-3.5 hover:bg-red-50 transition-colors">
+        Cancel Booking
+      </button>
+    </form>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

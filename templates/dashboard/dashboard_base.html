@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Staff Dashboard | Xceptional Place Hotel{% endblock %}</title>
+<link rel="icon" href="{% static 'images/logo.png' %}">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: {
+        ink: '#0a0a0a',
+        grey: { 50:'#fafafa',100:'#f2f2f2',200:'#e5e5e5',300:'#d4d4d4',400:'#a3a3a3',500:'#737373',600:'#525252',700:'#404040',800:'#262626',900:'#171717' },
+        gold: { 50:'#fbf6e9',100:'#f5e9c3',200:'#eddb99',300:'#e2c869',400:'#d4af37',500:'#c9a227',600:'#a9841e',700:'#856418',800:'#5c460f',900:'#332609' }
+      },
+      fontFamily: { serif: ['"Playfair Display"','serif'], sans: ['"Inter"','sans-serif'] }
+    }}
+  }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body class="bg-grey-50 text-ink font-sans antialiased min-h-screen">
+
+<header class="bg-ink text-white">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img src="{% static 'images/logo.png' %}" class="h-8 w-auto brightness-0 invert opacity-90" alt="Xceptional Place Hotel">
+      <span class="text-xs uppercase tracking-widest2 text-grey-400 border-l border-white/20 pl-3 ml-1">Staff Dashboard</span>
+    </div>
+    <nav class="hidden md:flex items-center gap-6 text-xs uppercase tracking-wide text-grey-300">
+      {% if request.user.is_authenticated %}
+      <a href="{% url 'dashboard:super_admin' %}" class="hover:text-gold-400">Overview</a>
+      <a href="{% url 'dashboard:front_desk' %}" class="hover:text-gold-400">Front Desk</a>
+      <a href="{% url 'dashboard:kitchen' %}" class="hover:text-gold-400">Kitchen</a>
+      <a href="{% url 'dashboard:laundry' %}" class="hover:text-gold-400">Laundry</a>
+      <a href="{% url 'dashboard:housekeeping' %}" class="hover:text-gold-400">Housekeeping</a>
+      {% endif %}
+    </nav>
+    <div class="flex items-center gap-4">
+      {% if request.user.is_authenticated %}
+      <span class="text-xs text-grey-400 hidden sm:inline">{{ request.user.get_full_name|default:request.user.username }}</span>
+      <a href="{% url 'dashboard:logout' %}" class="text-xs uppercase tracking-wide border border-white/20 px-3 py-1.5 hover:border-gold-400 hover:text-gold-400 transition-colors">Log Out</a>
+      {% endif %}
+      <a href="{% url 'core:home' %}" class="text-xs uppercase tracking-wide text-grey-400 hover:text-gold-400">View Site</a>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-5 lg:px-8 py-10">
+{% block content %}{% endblock %}
+</main>
+
+<script src="{% static 'js/site.js' %}"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>
