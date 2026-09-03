@@ -15,7 +15,7 @@ class BlogPost(models.Model):
     excerpt = models.CharField(max_length=300)
     content = models.TextField()
     cover_image = models.ImageField(upload_to='blog/', blank=True, null=True)
-    author = models.CharField(max_length=100, default='Xceptional Place Team')
+    author = models.CharField(max_length=100, default='Royal home hotel Team')
     published_date = models.DateField()
 
     class Meta:

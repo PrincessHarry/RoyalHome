@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('excerpt', models.CharField(max_length=300)),
                 ('content', models.TextField()),
                 ('cover_image', models.ImageField(upload_to='blog/')),
-                ('author', models.CharField(default='Xceptional Place Team', max_length=100)),
+                ('author', models.CharField(default='Royal home Team', max_length=100)),
                 ('published_date', models.DateField()),
             ],
             options={

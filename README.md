@@ -1,4 +1,4 @@
-# Xceptional Place Hotel — Smart Hotel Website (Django + Tailwind)
+# Royal home hotel — Smart Hotel Website (Django + Tailwind)
 
 A full-stack demo of a "smart" luxury hotel website: real-time-style booking engine,
 an in-stay "My Stay" guest services portal, an AI concierge chat widget, and
@@ -118,7 +118,7 @@ live integration isn't connected:
 ## Project Structure
 
 ```
-xceptional_hotel/
+royal_home_hotel/
 ├── core/            # Home, About, Contact, Testimonials, seed_data command
 ├── rooms/           # Room types, galleries, filtering
 ├── bookings/        # Booking flow, add-ons, manage/cancel

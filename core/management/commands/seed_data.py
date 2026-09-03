@@ -33,7 +33,7 @@ def img(name):
 
 
 class Command(BaseCommand):
-    help = 'Seed the database with realistic demo data for Xceptional Place Hotel'
+    help = 'Seed the database with realistic demo data for Royal home hotel'
 
     def handle(self, *args, **options):
         self.stdout.write('Clearing old demo data...')
@@ -143,7 +143,7 @@ class Command(BaseCommand):
             MenuItem(category=cat_starters, name='Peppered Snail', description='Garden snails sautéed in a smoky pepper sauce', price=Decimal('8500')),
             MenuItem(category=cat_starters, name='Chicken Suya Skewers', description='Grilled chicken with traditional suya spice', price=Decimal('6500'), is_signature=True),
             MenuItem(category=cat_starters, name='Plantain Chips & Guacamole', description='Crisp plantain with house guacamole', price=Decimal('4500')),
-            MenuItem(category=cat_mains, name='Jollof Rice & Grilled Chicken', description="Xceptional Place's signature smoky jollof", price=Decimal('9500'), is_signature=True),
+            MenuItem(category=cat_mains, name='Jollof Rice & Grilled Chicken', description="Royal home's signature smoky jollof", price=Decimal('9500'), is_signature=True),
             MenuItem(category=cat_mains, name='Egusi Soup & Pounded Yam', description='Melon seed soup with assorted meat', price=Decimal('11000')),
             MenuItem(category=cat_mains, name='Fried Rice & Turkey', description='Nigerian-style fried rice with roast turkey', price=Decimal('10500')),
             MenuItem(category=cat_mains, name='Grilled Tilapia & Ayamase', description='Whole tilapia with pepper sauce and plantain', price=Decimal('13500')),
@@ -223,14 +223,14 @@ class Command(BaseCommand):
         posts = [
             dict(title='5 Must-Visit Spots Near Rayfield, Jos', slug='must-visit-spots-rayfield-jos', category='local',
                  excerpt='From Rayfield Park to the Riyom Rock formations, here is how to spend a weekend around our neighbourhood.',
-                 content='Jos is one of Nigeria\'s most scenic cities, and Rayfield sits right at its heart.\n\nStart your morning at Rayfield Park, a short walk from the hotel, before heading out to the dramatic Riyom Rock formations. In the afternoon, the Jos Wildlife Park offers a relaxed safari experience for the whole family.\n\nEnd the day back at Xceptional Place — our rooftop offers one of the best sunset views in the city.',
+                 content='Jos is one of Nigeria\'s most scenic cities, and Rayfield sits right at its heart.\n\nStart your morning at Rayfield Park, a short walk from the hotel, before heading out to the dramatic Riyom Rock formations. In the afternoon, the Jos Wildlife Park offers a relaxed safari experience for the whole family.\n\nEnd the day back at Royal home — our rooftop offers one of the best sunset views in the city.',
                  image='building.jpg', date=date.today() - timedelta(days=14)),
             dict(title='Introducing Our AI Concierge: Ask, Order, Relax', slug='introducing-ai-concierge', category='hotel-news',
-                 excerpt='Meet Xcep, the AI concierge now available to every guest on web and WhatsApp.',
-                 content='We\'re excited to introduce Xcep, our new AI concierge. Available 24/7 on our website and WhatsApp, Xcep can answer questions about your stay, recommend the right room for your needs, and even place conversational orders — just say "bring towels and jollof to room 204" and it\'s done.\n\nEvery request is tracked live in your My Stay dashboard, from New through to Delivered.',
+                 excerpt='Meet Royal home Concierge, the AI concierge now available to every guest on web and WhatsApp.',
+                 content='We\'re excited to introduce Royal home Concierge, our new AI concierge. Available 24/7 on our website and WhatsApp, Royal home Concierge can answer questions about your stay, recommend the right room for your needs, and even place conversational orders — just say "bring towels and jollof to room 204" and it\'s done.\n\nEvery request is tracked live in your My Stay dashboard, from New through to Delivered.',
                  image='poolside.jpg', date=date.today() - timedelta(days=5)),
             dict(title='A Taste of Plateau: The Story Behind Our Jollof', slug='taste-of-plateau-jollof-story', category='food',
-                 excerpt='Our Executive Chef shares what makes the Xceptional Place jollof rice a signature dish.',
+                 excerpt='Our Executive Chef shares what makes the Royal home jollof rice a signature dish.',
                  content='Every hotel claims to have the best jollof — we let our guests be the judge. Our Executive Chef sources tomatoes and peppers from Plateau\'s highland farms, slow-smoking the rice over charcoal for a depth of flavour you won\'t find on a stovetop.\n\nPair it with our suya-spiced grilled chicken, available all day through room service.',
                  image='restaurant.jpg', date=date.today() - timedelta(days=30)),
         ]
